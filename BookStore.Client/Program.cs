@@ -32,7 +32,7 @@ namespace BookStore.Client
 
             _log = Log.ForContext<Program>();            
 
-            AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => Shutdown();
+            // AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => Shutdown();
             Console.CancelKeyPress += (sender, eventArgs) =>
             {
                 Shutdown();
@@ -52,9 +52,9 @@ namespace BookStore.Client
                 ClusterId = "orleans-docker",
 
                 // membership
-                GatewayProvider = GatewayProviderType.Custom,
-                DataConnectionString = "http://consul:8500",
-                CustomGatewayProviderAssemblyName = "Orleans.Clustering.Consul"
+                AdoInvariant = "Npgsql",
+                GatewayProvider = GatewayProviderType.SqlServer,
+                DataConnectionString = "Server=localhost;Port=5432;Database=orleans_membership;User ID=postgres;Pooling=false;",
             };
 
             return new ClientBuilder()

@@ -9,7 +9,7 @@ namespace BookStore.Grains
     {
         public Task<string> Ping()
         {           
-            return Task.FromResult($"Pong: {DateTimeOffset.Now}");
+            return Task.FromResult($"Pong: {DateTimeOffset.Now.ToString("HH:mm:ss.fff")}");
         }
     }
 }

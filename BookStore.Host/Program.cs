@@ -35,9 +35,9 @@ namespace BookStore.Host
             config.Globals.FastKillOnCancelKeyPress = true;
         
             // membership
-            config.Globals.LivenessType = LivenessProviderType.Custom;
-            config.Globals.DataConnectionString = "http://consul:8500";
-            config.Globals.MembershipTableAssembly = "Orleans.Clustering.Consul";
+            config.Globals.AdoInvariant = "Npgsql";
+            config.Globals.LivenessType = LivenessProviderType.SqlServer;
+            config.Globals.DataConnectionString = "Server=localhost;Port=5432;Database=orleans_membership;User ID=postgres;Pooling=false;";
 
             // reminders
             config.Globals.ReminderServiceType = ReminderServiceProviderType.Disabled;
@@ -52,10 +52,10 @@ namespace BookStore.Host
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(PingGrain).Assembly).WithReferences())
                 .Build();
 
-            AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => Shutdown();
-            Console.CancelKeyPress += (sender, eventArgs) =>
+            // AppDomain.CurrentDomain.ProcessExit += async (sender, eventArgs) => await Shutdown();
+            Console.CancelKeyPress += async (sender, eventArgs) =>
             {
-                Shutdown();
+                await Shutdown();
                 _wait.SetResult(true);
                 eventArgs.Cancel = true;
             };
@@ -72,10 +72,10 @@ namespace BookStore.Host
             _log.Information("Silo started");
         }
 
-        private static void Shutdown()
+        private static async Task Shutdown()
         {
             _log.Information("Stopping silo");
-            silo.Dispose();
+            await silo.StopAsync();
             _log.Information("Silo stopped");
         }
     }

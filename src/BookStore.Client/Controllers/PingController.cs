@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BookStore.Contracts;
+using BookStore.Contracts.Grains;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BookStore.Contracts;
+using BookStore.Contracts.Grains;
 using Orleans;
 
-namespace BookStore.Grains
+namespace BookStore.Grains.Grains
 {
     public class PingGrain : Grain, IPingGrain
     {
         public Task<string> Ping()
         {           
-            return Task.FromResult($"Pong: {DateTimeOffset.Now.ToString("HH:mm:ss.fff")}");
+            return Task.FromResult($"Pong: {DateTimeOffset.Now:HH:mm:ss.fff}");
         }
     }
 }

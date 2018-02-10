@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Orleans;
 
-namespace BookStore.Contracts
+namespace BookStore.Contracts.Grains
 {
     public interface IPingGrain : IGrainWithGuidKey
     {

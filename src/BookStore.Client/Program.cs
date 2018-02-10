@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BookStore.Contracts;
+using BookStore.Contracts.Grains;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -10,6 +11,7 @@ using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using static Orleans.Runtime.Configuration.ClientConfiguration;
 
 namespace BookStore.Client
@@ -27,7 +29,7 @@ namespace BookStore.Client
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
 
             _log = Log.ForContext<Program>();            
@@ -45,7 +47,7 @@ namespace BookStore.Client
             await _wait.Task;
         }
 
-        public static IClusterClient BuildOrleansClient(string[] args)
+        private static IClusterClient BuildOrleansClient(string[] args)
         {
             var config = new ClientConfiguration
             {
@@ -54,7 +56,7 @@ namespace BookStore.Client
                 // membership
                 AdoInvariant = "Npgsql",
                 GatewayProvider = GatewayProviderType.SqlServer,
-                DataConnectionString = "Server=localhost;Port=5432;Database=orleans_membership;User ID=postgres;Pooling=false;",
+                DataConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;",
             };
 
             return new ClientBuilder()
@@ -63,7 +65,7 @@ namespace BookStore.Client
                 .Build();
         }
 
-        public static IWebHost BuildWebHost(string[] args, Action<IServiceCollection> configureServices = null)
+        private static IWebHost BuildWebHost(string[] args, Action<IServiceCollection> configureServices = null)
         {
             configureServices = configureServices ?? new Action<IServiceCollection>(s => { });
 

@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using BookStore.Grains;
+using BookStore.Grains.Grains;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
+using Orleans.EventSourcing.LogStorage;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
+using Orleans.Storage;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using static Orleans.Runtime.Configuration.GlobalConfiguration;
 
 namespace BookStore.Host
@@ -25,7 +29,7 @@ namespace BookStore.Host
                 .MinimumLevel.Override("Orleans", LogEventLevel.Warning)
                 .MinimumLevel.Override("Runtime", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
             
             _log = Log.ForContext<Program>();
@@ -37,7 +41,7 @@ namespace BookStore.Host
             // membership
             config.Globals.AdoInvariant = "Npgsql";
             config.Globals.LivenessType = LivenessProviderType.SqlServer;
-            config.Globals.DataConnectionString = "Server=localhost;Port=5432;Database=orleans_membership;User ID=postgres;Pooling=false;";
+            config.Globals.DataConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
 
             // reminders
             config.Globals.ReminderServiceType = ReminderServiceProviderType.Disabled;
@@ -46,6 +50,19 @@ namespace BookStore.Host
             config.Defaults.Port = 11111;
             config.Defaults.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Any, 30000);
 
+            // storage
+            config.Globals.RegisterStorageProvider<AdoNetStorageProvider>("AdoNetStorage",
+                new Dictionary<string, string>
+                {
+                    {"AdoInvariant", "Npgsql"},
+                    {"UseJsonFormat", "true"},
+                    {
+                        "DataConnectionString",
+                        "Server=localhost;Port=5432;Database=bookstore_grains;User ID=postgres;Pooling=false;"
+                    },
+                });
+            config.Globals.RegisterLogConsistencyProvider<LogConsistencyProvider>("LogStorage");
+            
             silo = new SiloHostBuilder()
                 .UseConfiguration(config)
                 .ConfigureServices(s => s.AddLogging(b => b.AddSerilog()))

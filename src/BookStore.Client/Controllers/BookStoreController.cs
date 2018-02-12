@@ -18,8 +18,11 @@ namespace BookStore.Client.Controllers
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
+        /// <summary>
+        ///     Initialize new book store.
+        /// </summary>
         [HttpPost]
-        public async Task<Guid> Post(InitializeBookStoreRequest request)
+        public async Task<Guid> Post([FromBody] InitializeBookStoreRequest request)
         {
             var bookStoreId = Guid.NewGuid();
             var cmd = new InitializeBookStoreCommand(bookStoreId, request.Name);

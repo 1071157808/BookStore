@@ -2,16 +2,17 @@
 
 namespace BookStore.Grains.Events
 {
-    public abstract class Event
+    [Serializable]
+    public class Event
     {
-        protected Event()
+        public Event()
         {
             EventId = Guid.NewGuid();
             TimeStamp = DateTimeOffset.UtcNow;
         }
         
-        public Guid EventId { get; private set; }
+        public Guid EventId { get; set; }
         
-        public DateTimeOffset TimeStamp { get; private set; }
+        public DateTimeOffset TimeStamp { get; set; }
     }
 }

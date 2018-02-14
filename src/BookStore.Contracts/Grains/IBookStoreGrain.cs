@@ -7,5 +7,7 @@ namespace BookStore.Contracts.Grains
     public interface IBookStoreGrain : IGrainWithGuidKey
     {
         Task Initialize(InitializeBookStoreCommand cmd);
+
+        Task Update(UpdateBookStoreCommand cmd);
     }
 }

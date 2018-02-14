@@ -31,5 +31,16 @@ namespace BookStore.Client.Controllers
 
             return bookStoreId;
         }
+
+        /// <summary>
+        ///     Update book store.
+        /// </summary>
+        [HttpPut("{id:guid}")]
+        public async Task Put([FromRoute] Guid id, [FromBody] UpdateBookStoreRequest request)
+        {
+            var cmd = new UpdateBookStoreCommand(id, request.Name);
+            var bookStore = _client.GetGrain<IBookStoreGrain>(cmd.Id);
+            await bookStore.Update(cmd);
+        }
     }
 }

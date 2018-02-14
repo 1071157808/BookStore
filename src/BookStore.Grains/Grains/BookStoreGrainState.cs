@@ -15,5 +15,10 @@ namespace BookStore.Grains.Grains
             Id = @event.Id;
             Name = @event.Name;
         }
+        
+        public void Apply(BookStoreUpdatedEvent @event)
+        {
+            Name = @event.Name;
+        }
     }
 }

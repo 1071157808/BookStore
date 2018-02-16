@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BookStore.Grains.Grains;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
-using Orleans.EventSourcing.LogStorage;
+using Orleans.EventSourcing.CustomStorage;
 using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
 using Orleans.Storage;
@@ -61,7 +61,7 @@ namespace BookStore.Host
                         "Server=localhost;Port=5432;Database=bookstore_grains;User ID=postgres;Pooling=false;"
                     },
                 });
-            config.Globals.RegisterLogConsistencyProvider<LogConsistencyProvider>("LogStorage");
+            config.Globals.RegisterLogConsistencyProvider<LogConsistencyProvider>("CustomStorage");
             
             silo = new SiloHostBuilder()
                 .UseConfiguration(config)

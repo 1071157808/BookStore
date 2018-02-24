@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BookStore.Grains.Events;
 using EventStore.ClientAPI;
-using EventStore.ClientAPI.SystemData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orleans;
@@ -22,12 +20,9 @@ namespace BookStore.Grains
         private readonly IEventStoreConnection _connection;
         private string _stream;
 
-        protected EventStoreGrain()
+        protected EventStoreGrain(IEventStoreConnection connection)
         {
-            var settings = ConnectionSettings.Create()
-                .SetDefaultUserCredentials(new UserCredentials("admin", "admin"))
-                .UseConsoleLogger();
-            _connection = EventStoreConnection.Create(settings, new IPEndPoint(IPAddress.Loopback, 1113));
+            _connection = connection;
         }
 
         public async Task<KeyValuePair<int, TState>> ReadStateFromStorage()
@@ -65,16 +60,7 @@ namespace BookStore.Grains
         public override async Task OnActivateAsync()
         {
             _stream = $"{GetType().Name}-{this.GetPrimaryKey()}";
-            await _connection.ConnectAsync();
             await base.OnActivateAsync();
-        }
-
-        public override async Task OnDeactivateAsync()
-        {
-            _connection?.Close();
-            _connection?.Dispose();
-
-            await base.OnDeactivateAsync();
         }
 
         private static EventData ToEventData(Event @event)

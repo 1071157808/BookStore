@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
-using BookStore.Contracts;
 using BookStore.Contracts.Grains;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
-using Orleans.Hosting;
 using Orleans.Runtime.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -21,7 +20,7 @@ namespace BookStore.Client
         private static ILogger _log;
         private static IWebHost _webHost;
         private static IClusterClient _orleansClient;
-        private static readonly TaskCompletionSource<bool> _wait = new TaskCompletionSource<bool>();
+        private static readonly ManualResetEventSlim _wait = new ManualResetEventSlim(false);
 
         public static async Task Main(string[] args)
         {
@@ -38,13 +37,13 @@ namespace BookStore.Client
             Console.CancelKeyPress += (sender, eventArgs) =>
             {
                 Shutdown();
-                _wait.SetResult(true);
+                _wait.Set();
                 eventArgs.Cancel = true;
             };
 
             await Startup(args);
 
-            await _wait.Task;
+            _wait.Wait();
         }
 
         private static IClusterClient BuildOrleansClient(string[] args)
@@ -78,30 +77,21 @@ namespace BookStore.Client
 
         private static async Task Startup(string[] args)
         {
-            _log.Information("Starting orleans client");
             await StartOrleansClient(args);
-            _log.Information("Orleans client started");
-
-            _log.Information("Starting web api");
             await StartWebHost(args);
-            _log.Information("Web api started");
         }
 
         private static void Shutdown()
         {
-            _log.Information("Stopping web api");
-            _webHost.Dispose();
-            _log.Warning("Web api stopped");
-
-            _log.Information("Stopping orleans client");
-            _orleansClient.Dispose();
-            _log.Warning("Orleans client stopped");
+            StopOrleansClient();
+            StopWebHost();
         }
 
         private static async Task StartOrleansClient(string[] args)
         {
+            _log.Information("Starting orleans client");
+            
             var attempts = 0;
-
             while (true)
             {
                 try
@@ -124,11 +114,22 @@ namespace BookStore.Client
                     await Task.Delay(TimeSpan.FromSeconds(5));
                 }
             }
+            
+            _log.Information("Orleans client started");
         }
 
+        private static void StopOrleansClient()
+        {
+            _log.Information("Stopping orleans client");
+            _orleansClient.Dispose();
+            _log.Warning("Orleans client stopped");
+        }
+        
         private static async Task StartWebHost(string[] args)
         {
-            _webHost = BuildWebHost(args, s => s.Add(new ServiceDescriptor(typeof(IClusterClient), _orleansClient)));
+            _log.Information("Starting web api");
+            
+            _webHost = BuildWebHost(args, ConfigureServices);
 
             await _webHost.StartAsync();
 
@@ -141,6 +142,20 @@ namespace BookStore.Client
                     _log.Information($"Now listening on: {address}");
                 }
             }
+            
+            _log.Information("Web api started");
+        }
+
+        private static void StopWebHost()
+        {
+            _log.Information("Stopping web api");
+            _webHost.Dispose();
+            _log.Warning("Web api stopped");
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton(_orleansClient);
         }
     }
 }

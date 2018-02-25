@@ -4,14 +4,10 @@ namespace BookStore.Contracts.Commands.BookStoreGrain
 {
     public class InitializeBookStoreCommand
     {
-        public InitializeBookStoreCommand(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
-        public Guid Id { get; }
+        public Guid Id { get; set; }
         
-        public string Name { get; }
+        public string Name { get; set; }
+        
+        public AddressCommandData Address { get; set; }
     }
 }

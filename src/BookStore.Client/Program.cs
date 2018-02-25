@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using BookStore.Client.EventStore;
 using BookStore.Contracts.Grains;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -156,6 +158,8 @@ namespace BookStore.Client
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_orleansClient);
+            services.AddSingleton<IProjectionsClient>(
+                new ProjectionsClient(new EventStoreLogger(), new IPEndPoint(IPAddress.Loopback, 2113), TimeSpan.FromSeconds(10)));
         }
     }
 }

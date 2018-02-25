@@ -16,7 +16,10 @@ namespace BookStore.Grains.Grains
         
         public async Task Initialize(InitializeBookStoreCommand cmd)
         {
-            var @event = new BookStoreInitializedEvent(cmd.Id, cmd.Name);
+            var @event = new BookStoreInitializedEvent(
+                cmd.Id,
+                cmd.Name,
+                new AddressEventData(cmd.Address.Country, cmd.Address.City, cmd.Address.Street, cmd.Address.Building));
 
             RaiseEvent(@event);
             await ConfirmEvents();
@@ -24,7 +27,9 @@ namespace BookStore.Grains.Grains
 
         public async Task Update(UpdateBookStoreCommand cmd)
         {
-            var @event = new BookStoreUpdatedEvent(cmd.Name);
+            var @event = new BookStoreUpdatedEvent(
+                cmd.Name,
+                new AddressEventData(cmd.Address.Country, cmd.Address.City, cmd.Address.Street, cmd.Address.Building));
 
             RaiseEvent(@event);
             await ConfirmEvents();

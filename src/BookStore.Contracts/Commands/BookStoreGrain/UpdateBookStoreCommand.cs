@@ -3,15 +3,11 @@
 namespace BookStore.Contracts.Commands.BookStoreGrain
 {
     public class UpdateBookStoreCommand
-    {
-        public UpdateBookStoreCommand(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-        
-        public Guid Id { get; private set; }
+    {       
+        public Guid Id { get; set; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
+        
+        public AddressCommandData Address { get; set; }
     }
 }

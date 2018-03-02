@@ -9,14 +9,15 @@ using EventStore.ClientAPI;
 using EventStore.ClientAPI.SystemData;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
+using Orleans.Configuration;
 using Orleans.EventSourcing.CustomStorage;
 using Orleans.Hosting;
+using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 using Orleans.Storage;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using static Orleans.Runtime.Configuration.GlobalConfiguration;
 using ILogger = Serilog.ILogger;
 
 namespace BookStore.Host
@@ -70,41 +71,35 @@ namespace BookStore.Host
         {
             configureServices = configureServices ?? (s => { });
             
+            var clusterId = "orleans-docker";
+            
+            var siloPort = 11111;
+            var gatewayPort = 30000;
+            var siloAddress = IPAddress.Loopback;
+            
             var config = new ClusterConfiguration();
-            config.Globals.FastKillOnCancelKeyPress = false;
-            
-            config.Globals.ClusterId = "orleans-docker";
-            config.Globals.FastKillOnCancelKeyPress = true;
-        
-            // membership
-            config.Globals.AdoInvariant = "Npgsql";
-            config.Globals.LivenessType = LivenessProviderType.SqlServer;
-            config.Globals.DataConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
-
-            // reminders
-            config.Globals.ReminderServiceType = ReminderServiceProviderType.Disabled;
-            
-            // IP and ports
-            config.Defaults.Port = 11111;
-            config.Defaults.ProxyGatewayEndpoint = new IPEndPoint(IPAddress.Any, 30000);
-
-            // storage
-            config.Globals.RegisterStorageProvider<AdoNetStorageProvider>("AdoNetStorage",
-                new Dictionary<string, string>
-                {
-                    {"AdoInvariant", "Npgsql"},
-                    {"UseJsonFormat", "true"},
-                    {
-                        "DataConnectionString",
-                        "Server=localhost;Port=5432;Database=bookstore_grains;User ID=postgres;Pooling=false;"
-                    },
-                });
             config.Globals.RegisterLogConsistencyProvider<LogConsistencyProvider>("CustomStorage");
-            
+
             return new SiloHostBuilder()
                 .UseConfiguration(config)
                 .ConfigureServices(configureServices)
+                .ConfigureLogging(o => o.AddSerilog())
+                .Configure(o => o.ClusterId = clusterId)
+                .ConfigureEndpoints(siloAddress, siloPort, gatewayPort)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(PingGrain).Assembly).WithReferences())
+                
+                .AddAdoNetGrainStorage("AdoNetStorage", o =>
+                {
+                    o.Invariant = "Npgsql";
+                    o.UseJsonFormat = true;
+                    o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_grains;User ID=postgres;Pooling=false;";
+                })
+                                
+                .UseAdoNetClustering(o =>
+                {
+                    o.AdoInvariant = "Npgsql";
+                    o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
+                })                
                 .Build();
         }
 
@@ -156,7 +151,6 @@ namespace BookStore.Host
         
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(b => b.AddSerilog());
             services.AddSingleton(_eventStoreConnection);
         }
     }

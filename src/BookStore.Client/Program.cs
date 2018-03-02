@@ -9,11 +9,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
-using Orleans.Runtime.Configuration;
+using Orleans.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using static Orleans.Runtime.Configuration.ClientConfiguration;
 
 namespace BookStore.Client
 {
@@ -50,19 +49,17 @@ namespace BookStore.Client
 
         private static IClusterClient BuildOrleansClient(string[] args)
         {
-            var config = new ClientConfiguration
-            {
-                ClusterId = "orleans-docker",
-
-                // membership
-                AdoInvariant = "Npgsql",
-                GatewayProvider = GatewayProviderType.SqlServer,
-                DataConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;",
-            };
+            var clusterId = "orleans-docker";
 
             return new ClientBuilder()
+                .ConfigureCluster(options => options.ClusterId = clusterId)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IPingGrain).Assembly).WithReferences())
-                .UseConfiguration(config)
+                
+                .UseAdoNetClustering(o =>
+                {
+                    o.AdoInvariant = "Npgsql";
+                    o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
+                })
                 .Build();
         }
 

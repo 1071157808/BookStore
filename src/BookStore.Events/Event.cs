@@ -2,7 +2,6 @@
 
 namespace BookStore.Events
 {
-    [Serializable]
     public class Event
     {
         public Event()

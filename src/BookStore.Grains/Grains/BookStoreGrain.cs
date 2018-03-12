@@ -28,6 +28,7 @@ namespace BookStore.Grains.Grains
         public async Task Update(UpdateBookStoreCommand cmd)
         {
             var @event = new BookStoreUpdatedEvent(
+                cmd.Id,
                 cmd.Name,
                 new AddressEventData(cmd.Address.Country, cmd.Address.City, cmd.Address.Street, cmd.Address.Building));
 

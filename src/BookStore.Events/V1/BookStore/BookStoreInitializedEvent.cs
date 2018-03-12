@@ -2,7 +2,6 @@
 
 namespace BookStore.Events.V1.BookStore
 {
-    [Serializable]
     public class BookStoreInitializedEvent : Event
     {
         public BookStoreInitializedEvent(Guid id, string name, AddressEventData address)

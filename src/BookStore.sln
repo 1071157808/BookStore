@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Host", "BookStore.Host\BookStore.Host.csproj", "{6943F7C0-31A4-4C88-93D2-1DF0123C1CF5}"
@@ -8,6 +8,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Grains", "BookStore.Grains\BookStore.Grains.csproj", "{F3F5C607-8FF5-4DE1-ADA9-BF56BAFCC40E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Client", "BookStore.Client\BookStore.Client.csproj", "{DD6B6FAC-AB57-4092-A58D-6230796B4630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Events", "BookStore.Events\BookStore.Events.csproj", "{09C151B9-2F86-4E7A-B5AC-7289447B0F91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,5 +33,9 @@ Global
 		{DD6B6FAC-AB57-4092-A58D-6230796B4630}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD6B6FAC-AB57-4092-A58D-6230796B4630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD6B6FAC-AB57-4092-A58D-6230796B4630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C151B9-2F86-4E7A-B5AC-7289447B0F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C151B9-2F86-4E7A-B5AC-7289447B0F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C151B9-2F86-4E7A-B5AC-7289447B0F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C151B9-2F86-4E7A-B5AC-7289447B0F91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

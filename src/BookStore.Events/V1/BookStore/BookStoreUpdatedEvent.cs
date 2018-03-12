@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookStore.Grains.Events.BookStore
+namespace BookStore.Events.V1.BookStore
 {
     [Serializable]
     public class BookStoreUpdatedEvent : Event

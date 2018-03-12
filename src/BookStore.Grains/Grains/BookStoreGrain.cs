@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BookStore.Contracts.Commands.BookStoreGrain;
 using BookStore.Contracts.Grains;
-using BookStore.Grains.Events.BookStore;
+using BookStore.Events.V1.BookStore;
 using EventStore.ClientAPI;
 using Orleans.Providers;
 

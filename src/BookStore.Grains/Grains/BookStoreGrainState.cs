@@ -1,5 +1,5 @@
 ﻿using System;
-using BookStore.Grains.Events.BookStore;
+using BookStore.Events.V1.BookStore;
 
 namespace BookStore.Grains.Grains
 {

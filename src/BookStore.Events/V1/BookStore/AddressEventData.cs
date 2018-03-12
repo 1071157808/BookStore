@@ -1,4 +1,4 @@
-﻿namespace BookStore.Grains.Events.BookStore
+﻿namespace BookStore.Events.V1.BookStore
 {
     public class AddressEventData
     {

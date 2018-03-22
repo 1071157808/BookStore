@@ -20,5 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Events\BookStore.Events.csproj" />
+    <ProjectReference Include="..\BookStore.ProjectionBuilder.Postgres.Database\BookStore.ProjectionBuilder.Postgres.Database.csproj" />
   </ItemGroup>
 </Project>

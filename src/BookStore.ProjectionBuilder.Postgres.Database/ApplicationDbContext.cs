@@ -1,17 +1,21 @@
 ﻿using BookStore.ProjectionBuilder.Postgres.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace BookStore.ProjectionBuilder.Postgres.Database
 {
     public class ApplicationDbContext : DbContext
     {
+        private readonly string _connectionString;
+
+        public ApplicationDbContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            
-            var connectionString = Configuration.Instance.GetConnectionString(nameof(ApplicationDbContext));
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseNpgsql(_connectionString);
         }
 
         public DbSet<StreamVersion> StreamVersions { get; set; }

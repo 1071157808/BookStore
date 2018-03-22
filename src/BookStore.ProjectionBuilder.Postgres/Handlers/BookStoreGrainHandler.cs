@@ -36,7 +36,7 @@ namespace BookStore.ProjectionBuilder.Postgres.Handlers
 
         private async Task Apply(BookStoreInitializedEvent @event, long version)
         {
-            using (var db = new ApplicationDbContext())
+            using (var db = new ApplicationDbContext(Configuration.ConnectionString))
             {
                 await UpdateStreamVersion(db, version);
                 CreateBookStore(db, @event);
@@ -47,7 +47,7 @@ namespace BookStore.ProjectionBuilder.Postgres.Handlers
         
         private async Task Apply(BookStoreUpdatedEvent @event, long version)
         {
-            using (var db = new ApplicationDbContext())
+            using (var db = new ApplicationDbContext(Configuration.ConnectionString))
             {
                 await UpdateStreamVersion(db, version);
                 await UpdateBookStore(db, @event);

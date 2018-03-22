@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Events", "BookSto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.ProjectionBuilder.Postgres", "BookStore.ProjectionBuilder.Postgres\BookStore.ProjectionBuilder.Postgres.csproj", "{48716DF5-0D0D-4B88-9EA2-626B82868761}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.ProjectionBuilder.Postgres.Database", "BookStore.ProjectionBuilder.Postgres.Database\BookStore.ProjectionBuilder.Postgres.Database.csproj", "{7A65278E-4D3C-4AC8-8269-8DFB28443F89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +45,9 @@ Global
 		{48716DF5-0D0D-4B88-9EA2-626B82868761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48716DF5-0D0D-4B88-9EA2-626B82868761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48716DF5-0D0D-4B88-9EA2-626B82868761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A65278E-4D3C-4AC8-8269-8DFB28443F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A65278E-4D3C-4AC8-8269-8DFB28443F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A65278E-4D3C-4AC8-8269-8DFB28443F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A65278E-4D3C-4AC8-8269-8DFB28443F89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

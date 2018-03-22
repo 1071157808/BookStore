@@ -18,7 +18,7 @@ namespace BookStore.ProjectionBuilder.Postgres.Database
         
         public static async Task<(string StreamName, long Version)[]> GetStreamVersions()
         {
-            using (var db = new ApplicationDbContext())
+            using (var db = new ApplicationDbContext(Configuration.ConnectionString))
             {
                 _log.Debug("Reading streams versions from db.");
                 var result = await db.StreamVersions.ToArrayAsync();
@@ -30,7 +30,7 @@ namespace BookStore.ProjectionBuilder.Postgres.Database
 
         public static async Task InitializeStreamVersions(string[] streamNames)
         {
-            using (var db = new ApplicationDbContext())
+            using (var db = new ApplicationDbContext(Configuration.ConnectionString))
             {
                 _log.Debug("Reading streams versions from db.");
                 var existingStreams = await db.StreamVersions.Select(i => i.StreamName).ToArrayAsync();

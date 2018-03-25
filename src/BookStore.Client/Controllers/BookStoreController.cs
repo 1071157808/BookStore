@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BookStore.Client.EventStore;
-using BookStore.Client.Requests;
+using BookStore.Client.Queries;
 using BookStore.Client.Requests.BookStore;
 using BookStore.Client.Responses.BookStore;
 using BookStore.Contracts.Commands.BookStoreGrain;
@@ -15,12 +14,23 @@ namespace BookStore.Client.Controllers
     public class BookStoreController : Controller
     {
         private readonly IClusterClient _client;
-        private readonly IProjectionsClient _projectionsClient;
+        private readonly IBookStoreQuery _query;
 
-        public BookStoreController(IClusterClient client, IProjectionsClient projectionsClient)
+        public BookStoreController(IClusterClient client, IBookStoreQuery query)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-            _projectionsClient = projectionsClient ?? throw new ArgumentNullException(nameof(projectionsClient));
+            _query = query ?? throw new ArgumentNullException(nameof(query));
+        }
+        
+        /// <summary>
+        ///      Get book stores data.
+        /// </summary>
+        [HttpGet]
+        public async Task<BookStoreResponse[]> Get()
+        {
+            var bookStores = await _query.GetBookStores();
+            
+            return bookStores;
         }
 
         /// <summary>
@@ -29,10 +39,9 @@ namespace BookStore.Client.Controllers
         [HttpGet("{id:guid}")]
         public async Task<BookStoreResponse> Get(Guid id)
         {
-            var partition = $"BookStoreGrain-{id}";
-            var state = await _projectionsClient.GetPartitionStateAsync<BookStoreResponse>("BookStore", partition);
+            var bookStore = await _query.GetBookStore(id);
             
-            return state;
+            return bookStore;
         }
         
         /// <summary>

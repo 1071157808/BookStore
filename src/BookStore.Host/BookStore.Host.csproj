@@ -13,9 +13,9 @@
     <PackageReference Include="Microsoft.Orleans.Runtime.Legacy" Version="2.0.0-rc1" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-rc1" />
     <PackageReference Include="EventStore.ClientAPI.NetCore" Version="4.1.0.23" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Npgsql" Version="3.1.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Contracts\BookStore.Contracts.csproj" />

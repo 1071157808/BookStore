@@ -16,12 +16,14 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-rc1" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AdoNet" Version="2.0.0-rc1" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Npgsql" Version="3.1.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.2.0" />
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Contracts\BookStore.Contracts.csproj" />
+    <ProjectReference Include="..\BookStore.ProjectionBuilder.Postgres.Database\BookStore.ProjectionBuilder.Postgres.Database.csproj" />
   </ItemGroup>
 </Project>

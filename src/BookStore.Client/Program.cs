@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using BookStore.Client.EventStore;
+using BookStore.Client.Queries;
+using BookStore.Client.Queries.Postgres;
 using BookStore.Contracts.Grains;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -65,7 +65,7 @@ namespace BookStore.Client
 
         private static IWebHost BuildWebHost(string[] args, Action<IServiceCollection> configureServices = null)
         {
-            configureServices = configureServices ?? new Action<IServiceCollection>(s => { });
+            configureServices = configureServices ?? (s => { });
 
             return WebHost.CreateDefaultBuilder(args)
                .ConfigureServices(configureServices)
@@ -155,8 +155,7 @@ namespace BookStore.Client
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_orleansClient);
-            services.AddSingleton<IProjectionsClient>(
-                new ProjectionsClient(new EventStoreLogger(), new IPEndPoint(IPAddress.Loopback, 2113), TimeSpan.FromSeconds(10)));
+            services.AddTransient<IBookStoreQuery, BookStoreQuery>();
         }
     }
 }

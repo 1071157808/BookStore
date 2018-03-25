@@ -44,6 +44,8 @@ namespace BookStore.Client
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookStore API V1");
+                c.DisplayRequestDuration();
+                c.DefaultModelsExpandDepth(-1);
             });
             
             app.UseMvc();

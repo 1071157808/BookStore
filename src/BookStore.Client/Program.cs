@@ -30,6 +30,7 @@ namespace BookStore.Client
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .WriteTo.Async(c => c.File("./logs/log.log", rollingInterval: RollingInterval.Day))
                 .CreateLogger();
 
             _log = Log.ForContext<Program>();            
@@ -84,6 +85,8 @@ namespace BookStore.Client
         {
             StopOrleansClient();
             StopWebHost();
+            
+            Log.CloseAndFlush();
         }
 
         private static async Task StartOrleansClient(string[] args)

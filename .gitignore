@@ -42,3 +42,6 @@ Thumbs.db
 
 # rider
 .idea/
+
+#logs
+logs/

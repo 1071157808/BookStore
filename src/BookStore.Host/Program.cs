@@ -37,6 +37,7 @@ namespace BookStore.Host
                 .MinimumLevel.Override("Runtime", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .WriteTo.Async(c => c.File("./logs/log.log", rollingInterval: RollingInterval.Day))
                 .CreateLogger();
             
             _log = Log.ForContext<Program>();
@@ -46,7 +47,6 @@ namespace BookStore.Host
             {
                 Shutdown();
                 _wait.Set();
-                eventArgs.Cancel = true;
             };
 
             await Startup(args);
@@ -64,6 +64,8 @@ namespace BookStore.Host
         {
             StopEventStoreConnection();
             StopSilo();
+            
+            Log.CloseAndFlush();
         }
 
         // orleans silo host

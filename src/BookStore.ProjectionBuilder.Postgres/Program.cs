@@ -34,6 +34,7 @@ namespace BookStore.ProjectionBuilder.Postgres
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .WriteTo.Async(c => c.File("./logs/log.log", rollingInterval: RollingInterval.Day))
                 .CreateLogger();
 
             _log = Log.ForContext<Program>();
@@ -65,6 +66,8 @@ namespace BookStore.ProjectionBuilder.Postgres
         {
             Unsubscribe();
             StopEventStoreConnection();
+            
+            Log.CloseAndFlush();
         }
 
         // database

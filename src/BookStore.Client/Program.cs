@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
+using Orleans.Configuration;
 using Orleans.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -53,12 +54,12 @@ namespace BookStore.Client
             var clusterId = "orleans-docker";
 
             return new ClientBuilder()
-                .ConfigureCluster(options => options.ClusterId = clusterId)
+                .Configure<ClusterOptions>(options => options.ClusterId = clusterId)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IPingGrain).Assembly).WithReferences())
                 
                 .UseAdoNetClustering(o =>
                 {
-                    o.AdoInvariant = "Npgsql";
+                    o.Invariant = "Npgsql";
                     o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
                 })
                 .Build();

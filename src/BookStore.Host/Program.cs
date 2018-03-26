@@ -86,7 +86,7 @@ namespace BookStore.Host
                 .UseConfiguration(config)
                 .ConfigureServices(configureServices)
                 .ConfigureLogging(o => o.AddSerilog())
-                .Configure(o => o.ClusterId = clusterId)
+                .Configure<ClusterOptions>(o => o.ClusterId = clusterId)
                 .ConfigureEndpoints(siloAddress, siloPort, gatewayPort)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(PingGrain).Assembly).WithReferences())
                 
@@ -99,7 +99,7 @@ namespace BookStore.Host
                                 
                 .UseAdoNetClustering(o =>
                 {
-                    o.AdoInvariant = "Npgsql";
+                    o.Invariant = "Npgsql";
                     o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_membership;User ID=postgres;Pooling=false;";
                 })                
                 .Build();

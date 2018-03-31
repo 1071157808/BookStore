@@ -79,11 +79,7 @@ namespace BookStore.Host
             var gatewayPort = 30000;
             var siloAddress = IPAddress.Loopback;
             
-            var config = new ClusterConfiguration();
-            config.Globals.RegisterLogConsistencyProvider<LogConsistencyProvider>("CustomStorage");
-
             return new SiloHostBuilder()
-                .UseConfiguration(config)
                 .ConfigureServices(configureServices)
                 .ConfigureLogging(o => o.AddSerilog())
                 .Configure<ClusterOptions>(o => o.ClusterId = clusterId)
@@ -96,6 +92,8 @@ namespace BookStore.Host
                     o.UseJsonFormat = true;
                     o.ConnectionString = "Server=localhost;Port=5432;Database=bookstore_grains;User ID=postgres;Pooling=false;";
                 })
+                
+                .AddCustomStorageBasedLogConsistencyProvider("CustomStorage")
                                 
                 .UseAdoNetClustering(o =>
                 {
